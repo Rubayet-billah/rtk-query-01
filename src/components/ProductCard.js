@@ -19,7 +19,10 @@ const ProductCard = ({ product }) => {
     usePostProductMutation();
 
   if (deleteSuccess) {
-    toast.success("delete successfull", { id: "delete" });
+    toast.success("Delete successfull hui hui hui", { id: "delete" });
+  }
+  if (postSuccess) {
+    toast.success("Product added hui hui hui", { id: "delete" });
   }
 
   return (
