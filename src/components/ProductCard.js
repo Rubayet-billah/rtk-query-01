@@ -3,10 +3,25 @@ import { BiListPlus } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { MdDeleteForever } from "react-icons/md";
+import {
+  useDeleteProductMutation,
+  usePostProductMutation,
+} from "../features/api/apiSlice";
+import { toast } from "react-hot-toast";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const { pathname } = useLocation();
+
+  const [deleteFn, { data: deleteData, isSuccess: deleteSuccess }] =
+    useDeleteProductMutation();
+  const [postFn, { data: postData, isSuccess: postSuccess }] =
+    usePostProductMutation();
+
+  if (deleteSuccess) {
+    toast.success("delete successfull", { id: "delete" });
+  }
+
   return (
     <div className="shadow-lg relative rounded-3xl border p-3 flex flex-col text-indigo-900">
       {pathname.includes("cart") && (
@@ -21,7 +36,7 @@ const ProductCard = ({ product }) => {
       <p className="text-center font-semibold mb-3">Rating: {product.rating}</p>
       <div className=" flex-1">
         <ul className="space-y-2">
-          {product.keyFeature.map((feature) => {
+          {product?.keyFeature?.map((feature) => {
             return (
               <li key={feature} className="text-sm ">
                 {feature}
@@ -33,7 +48,7 @@ const ProductCard = ({ product }) => {
       <div className="flex gap-2 mt-5">
         {!pathname.includes("cart") && (
           <button
-            onClick={() => dispatch()}
+            onClick={() => postFn({ product: { model: "Hui Hui Hui" } })}
             className="bg-indigo-500 rounded-full py-1 px-2 flex-1 text-white text-bold"
           >
             Add to cart
@@ -48,10 +63,10 @@ const ProductCard = ({ product }) => {
             <BiListPlus className="text-white" />
           </button>
         )}
-        {pathname.includes("cart") && (
+        {pathname.includes("") && (
           <button
             title="Remove"
-            onClick={() => dispatch()}
+            onClick={() => deleteFn({ id: product._id })}
             className="flex justify-between px-3 bg-red-500 text-white p-1 rounded-full flex-1"
           >
             <p>Remove</p>
